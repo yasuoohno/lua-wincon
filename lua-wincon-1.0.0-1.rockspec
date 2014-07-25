@@ -1,15 +1,15 @@
-package = "LuaWinCon"
+package = "lua-wincon"
 
 version = "1.0.0-1"
 
 source = {
-    url = "https://github.com/yasuoohno/luawincon/releases/download/v1.0.0-1/luawincon-1.0.0-1.zip"
+    url = "https://github.com/yasuoohno/lua-wincon/releases/download/v1.0.0-1/lua-wincon-1.0.0-1.zip"
 }
 
 description = {
-    summary = "LuaWinCon - Windows Console Utility for Lua",
+    summary = "lua-wincon - Windows Console Utility for Lua",
     detailed = [[
-        WinCon is an add-on module that allows change colors for
+        lua-wincon is an add-on module that allows change colors for
         Windows console text and background.
     ]],
     homepage = "http://sceneryandfish.withnotes.net/?page_id=1954", 
