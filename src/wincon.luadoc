@@ -17,6 +17,25 @@ function GetTextColor() end
 --- Set text fore and back color.
 -- @param foreground color number or nil(do not change)
 -- @param background color number or nil(do not change)
+-- <p>Color Number List.</p>
+-- <ul>
+-- <li>0 = BLACK</li>
+-- <li>1 = NAVY
+-- <li>2 = MAROON
+-- <li>3 = PURPLE
+-- <li>4 = GREEN
+-- <li>5 = TEAL
+-- <li>6 = OLIVE
+-- <li>7 = GRAY
+-- <li>8 = BLACK
+-- <li>9 = BLUE
+-- <li>10 = RED
+-- <li>11 = FUCHSIA
+-- <li>12 = LIME
+-- <li>13 = AQUA
+-- <li>14 = YELLOW
+-- <li>15 = WHITE
+-- <ul>
 function SetTextColor(foreground, background) end
 --- Get/Set initial text attribute.
 -- Initial text attribute is used to restore text attribute on detached process.
