@@ -1,9 +1,9 @@
 package = "lua-wincon"
 
-version = "1.0.0-1"
+version = "1.1.0-1"
 
 source = {
-    url = "https://github.com/yasuoohno/lua-wincon/releases/download/v1.0.0-1/lua-wincon-1.0.0-1.zip"
+    url = "https://github.com/yasuoohno/lua-wincon/releases/download/v1.1.0-1/lua-wincon-1.1.0-1.zip"
 }
 
 description = {
@@ -14,7 +14,7 @@ description = {
     ]],
     homepage = "http://sceneryandfish.withnotes.net/?page_id=1954", 
     license = "MIT/X11",
-    maintainer = "Yasuo Ohno <yasuo.ohno@gmail.com>"
+    maintainer = "Yasuo Ohno (yasuo.ohno at gmail dot com)"
 }
 
 supported_platforms = {

@@ -22,6 +22,12 @@ Usage
     --
     wincon.SetTextAttribute(wincon.InitialTextAttribute())
 
+Change Log
+----------
+
+  * v1.1.0 - SetTextColor accepts color name string.
+  * v1.0.0 - Initial release.
+
 Reference
 ---------
 
