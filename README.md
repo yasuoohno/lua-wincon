@@ -24,3 +24,5 @@ Usage
 
 Reference
 ---------
+
+See [ldoc](doc/index.html)
