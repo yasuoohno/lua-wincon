@@ -1,3 +1,10 @@
+///
+/// module: wincon
+/// release: 1.1.0-1
+/// license: MIT/X11
+/// author: Yasuo Ohno (yasuo.ohno at gmail dot com)
+///
+
 #include "lua_wincon.h"
 
 #include <Windows.h>
@@ -12,7 +19,7 @@ const static WORD RESET_BACKGROUND_COLOR = ~BACKGROUND_BLUE & ~BACKGROUND_RED & 
  */
 static lua_Integer default_attribute = -1;
 
-/**
+/*
  * dll entry point.
  */
 BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved)
@@ -60,7 +67,7 @@ static const CPTable cp_table[] = {
     { NULL,         0 }
 };
 
-/**
+/*
  * convert string to codepage number.
  */
 static
@@ -86,6 +93,29 @@ UINT string_to_cp(const char* str)
 }
 
 /**
+ * color table.
+ */
+static const char *color_table[] = {
+    "BLACK",
+    "NAVY",
+    "MAROON",
+    "PURPLE",
+    "GREEN",
+    "TEAL",
+    "OLIVE",
+    "GRAY",
+    "BLACK",
+    "BLUE",
+    "RED",
+    "FUCHSIA",
+    "LIME",
+    "AQUA",
+    "YELLOW",
+    "WHITE",
+    NULL
+};
+
+/*
  * get foreground color from attribute
  */
 static
@@ -104,7 +134,86 @@ lua_Integer get_foreground_color(WORD attribute) {
     return color;
 }
 
-/**
+static
+int is_decimal(const char *str)
+{
+    int result;
+
+    result = 0;
+    if (str == NULL || *str == 0)
+        return 0;
+
+    while(*str) {
+        if (*str < '0' || *str > '9')
+            return 0;
+        ++str;
+    }
+
+    return 1;
+}
+
+
+/*
+ * get color number from string
+ */
+static
+lua_Integer string_to_color(const char* str)
+{
+    lua_Integer c;
+
+    if (str == NULL)
+        return (lua_Integer)-1;
+
+    c = 0;
+    while (color_table[c] != NULL) {
+        if (_stricmp(color_table[c], str) == 0)
+            return c;
+        ++c;
+    }
+
+    // not found - convert string to number.
+    if (is_decimal(str))
+        c = (lua_Integer)atoi(str);
+
+    if (c < 0 || c > 15)
+        return (lua_Integer)-1;
+
+    return c;
+}
+
+/*
+ * get parameter as a color.
+ */
+static
+lua_Integer get_color_param(lua_State *L, int index)
+{
+    lua_Integer color;
+
+    // no parameter
+    if (lua_gettop(L) < index)
+        return -1;
+
+    // nil parameter
+    if (lua_isnil(L, index))
+        return -1;
+
+    // number or string
+    if (lua_isnumber(L, index)) {
+        color = lua_tointeger(L, index);
+    } else if (lua_isstring(L, index)) {
+        color = string_to_color(lua_tostring(L, index));
+    } else {
+        return luaL_error(L, "illegal color value");
+    }
+
+    if (color < 0 || color > 15)
+        return luaL_error(L, "illegal color value.");
+
+    return color;
+}
+
+
+/*
  * change foreground color on attribute
  */
 static
@@ -125,8 +234,8 @@ WORD set_foreground_color(WORD attribute, lua_Integer color) {
     return attribute;
 }
 
-/**
- * get background color from attribute.
+/*
+ * get background color from an attribute.
  */
 static
 lua_Integer get_background_color(WORD attribute) {
@@ -144,8 +253,8 @@ lua_Integer get_background_color(WORD attribute) {
     return color;
 }
 
-/**
- * change background color on attribute.
+/*
+ * change background color on an attribute.
  */
 static
 WORD set_background_color(WORD attribute, lua_Integer color) {
@@ -165,16 +274,14 @@ WORD set_background_color(WORD attribute, lua_Integer color) {
     return attribute;
 }
 
-/**
- * GetTextAttribute c function.
- *
- * Lua Usage:
- *   GetTextAttribute()
- *     : {number|nil} text attribute or nil if failed.
- *
- * @param L lua state
- * @return number of returned values.
- */
+///
+/// Get console text attribute.
+///
+/// Please refer to [Character Attributes](http://msdn.microsoft.com/en-us/library/windows/desktop/ms682088.aspx#_win32_character_attributes)
+///
+/// function: SetTextAttribute
+/// tparam: number text attribute number.
+///
 static
 int get_text_attribute(lua_State *L) {
     HANDLE hConsole;
@@ -192,16 +299,14 @@ int get_text_attribute(lua_State *L) {
     return 1;
 }
 
-/**
- * SetTextAttribute c function.
- *
- * Lua Usage:
- *   SetTextAttribute(text_attribute)
- *     - {number} text_attribute
- *
- * @param L lua state
- * @return number of returned values.
- */
+///
+/// Set console text attribute.
+///
+/// A simple wrapper of [SetConsoleTextAttribute](http://msdn.microsoft.com/en-us/library/windows/desktop/ms686047.aspx)
+///
+/// function: SetTextAttribute
+/// tparam: number text attribute number.
+///
 static
 int set_text_attribute(lua_State *L) {
     HANDLE hConsole;
@@ -219,17 +324,13 @@ int set_text_attribute(lua_State *L) {
     return 0;
 }
 
-/**
- * GetTextColor lua c function.
- *
- * Lua Usage:
- *   GetTextColor()
- *     : {number|nil} foreground color number or nil if failed.
- *     : {number} background color number.
- *
- * @param L lua state
- * @return number of returned values.
- */
+///
+/// Get text fore and back color.
+///
+/// function: GetTextColor
+/// treturn: number foreground color number.
+/// treturn: number background color number.
+///
 static
 int get_text_color(lua_State *L) {
     HANDLE hConsole;
@@ -249,18 +350,37 @@ int get_text_color(lua_State *L) {
     return 2;
 }
 
-/**
- * SetTextColor lua c function.
- *
- * Lua Usage:
- *   SetTextColor(fore, back)
- *     - {number} fore - foreground color (0-15 or nil)
- *     - {number} back - background color (0-15 or nil)
- *     : {number} new text attribute.
- *
- * @param L lua state
- * @return number of returned values.
- */
+///
+/// Set text fore and back color.
+///
+/// Color string/number list.
+///
+///   0. BLACK
+///   1. NAVY
+///   2. MAROON
+///   3. PURPLE
+///   4. GREEN
+///   5. TEAL
+///   6. OLIVE
+///   7. GRAY
+///   8. BLACK
+///   9. BLUE
+///   10. RED
+///   11. FUCHSIA
+///   12. LIME
+///   13. AQUA
+///   14. YELLOW
+///   15. WHITE
+///
+/// function: SetTextColor
+/// tparam: string|number|nil foreground
+///  color string, number or nil.  
+///  The foreground color will not be changed, if this parameter is nil.
+/// tparam: string|number|nil background
+///  color string, number or nil.  
+///  The background color will not be changed, if this parameter is nil.
+/// treturn: number|nil current text attribute number or nil if failed.
+///
 static
 int set_text_color(lua_State *L) {
     HANDLE hConsole;
@@ -269,13 +389,8 @@ int set_text_color(lua_State *L) {
     lua_Integer back_color;
     WORD new_attribute;
 
-    fore_color = -1;
-    back_color = -1;
-
-    if (lua_gettop(L) > 0 && ! lua_isnil(L, 1))
-        fore_color = lua_tointeger(L, 1);
-    if (lua_gettop(L) > 1 && ! lua_isnil(L, 2))
-        back_color = lua_tointeger(L, 2);
+    fore_color = get_color_param(L, 1);
+    back_color = get_color_param(L, 2);
 
     hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
     if (hConsole == INVALID_HANDLE_VALUE)
@@ -294,17 +409,16 @@ int set_text_color(lua_State *L) {
     return 1;
 }
 
-/**
- * InitialTextAttribute lua c function.
- *
- * Lua Usage:
- *   InitialTextAttribute(new_attribute)
- *     - {number} new_attribute replace initial text attribute.
- *     : {number} current attribute
- *
- * @param L lua state
- * @return number of returned values.
- */
+///
+/// Get/Set initial text attribute.
+///
+/// Initial text attribute is used to restore text attribute when the dll is detaching from the process.  
+/// Its default value is taken when the DLL was attaching.
+///
+/// function: InitialTextAttribute
+/// tparam: ?number new_attribute text attribute number, -1 or nil(do not change).<br>The -1 value indicate that it will not restore text attribute when the dll is detaching.
+/// treturn: number current initial text attribute number.
+///
 static
 int initial_text_attribute(lua_State *L)
 {
@@ -316,16 +430,12 @@ int initial_text_attribute(lua_State *L)
     return 1;
 }
 
-/**
- * GetCodepage lua c function.
- *
- * Lua Usage:
- *   GetCodepage()
- *     : {number} current input codepage.
- *
- * @param L lua state
- * @return number of returned values.
- */
+///
+/// Get console input codepage
+///
+/// function: GetCodepage
+/// treturn: number codepage number
+///
 static
 int get_codepage(lua_State *L)
 {
@@ -337,17 +447,25 @@ int get_codepage(lua_State *L)
     return 1;
 }
 
-/**
- * SetCodepage lua c function.
- *
- * Lua Usage:
- *   SetCodepage(codepage)
- *     - codepage {number|string} input codepage.
- *     : {boolean} true if completed successfully.
- *
- * @param L lua state
- * @return number of returned values.
- */
+///
+/// Set console input codepage
+///
+/// function: SetOutputCodepage
+/// tparam: string|number codepage number or string.
+///
+/// If the codepage parameter is a string, it must be one of the followings.
+///
+///  * "ANSI"
+///  * "OEM"
+///  * "T_ANSI"
+///  * "SYMBOL"
+///  * "UTF7"
+///  * "UTF8"
+///
+/// treturn: boolean|nil  
+/// If the function succeeds, the return value is true.  
+/// If the SetConsoleCP API failed, the return value is false. Otherwise nil.
+///
 static
 int set_codepage(lua_State *L)
 {
@@ -373,16 +491,12 @@ int set_codepage(lua_State *L)
     return 1;
 }
 
-/**
- * GetOutputCodepage lua c function.
- *
- * Lua Usage:
- *   GetOutputCodepage()
- *     : {number} current output codepage.
- *
- * @param L lua state
- * @return number of returned values.
- */
+///
+/// Get console output codepage
+///
+/// function: GetOutputCodepage
+/// treturn: number codepage number
+///
 static
 int get_output_codepage(lua_State *L)
 {
@@ -394,17 +508,25 @@ int get_output_codepage(lua_State *L)
     return 1;
 }
 
-/**
- * SetOutputCodepage lua c function.
- *
- * Lua Usage:
- *   SetOutputCodepage(codepage)
- *     - codepage {number|string} output codepage.
- *     : {boolean} true if completed successfully.
- *
- * @param L lua state
- * @return number of returned values.
- */
+///
+/// Set console output codepage
+///
+/// function: SetOutputCodepage
+/// tparam: string|number codepage number or string.
+///
+/// If the codepage parameter is a string, it must be one of the followings.
+///
+///  * "ANSI"
+///  * "OEM"
+///  * "T_ANSI"
+///  * "SYMBOL"
+///  * "UTF7"
+///  * "UTF8"
+///
+/// treturn: boolean|nil  
+/// If the function succeeds, the return value is true.  
+/// If the SetConsoleOutputCP API failed, the return value is false. Otherwise nil.
+///
 static
 int set_output_codepage(lua_State *L)
 {
@@ -432,6 +554,9 @@ int set_output_codepage(lua_State *L)
 
 /**********************************************************************/
 
+/*
+ * export functions to lua.
+ */
 static struct luaL_Reg funcs[] = {
     { "GetTextAttribute", get_text_attribute },
     { "SetTextAttribute", set_text_attribute },
@@ -445,10 +570,8 @@ static struct luaL_Reg funcs[] = {
     { NULL, NULL }
 };
 
-/**
+/*
  * lua module entry point.
- *
- * @return number of returned values. always 1 (module table).
  */
 int luaopen_wincon (lua_State *L) {
 #if LUA_VERSION_NUM > 501
