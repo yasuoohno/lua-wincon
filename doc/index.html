@@ -1,0 +1,320 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>Reference</title>
+    <link rel="stylesheet" href="ldoc.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>ldoc</h1>
+
+
+<h2>Contents</h2>
+<ul>
+<li><a href="#Functions">Functions</a></li>
+</ul>
+
+
+<h2>Modules</h2>
+<ul class="$(kind=='Topics' and '' or 'nowrap'">
+  <li><strong>wincon</strong></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+<h1>Module <code>wincon</code></h1>
+<p>LuaWinCon is a Windows Console Utility for Lua.</p>
+<p>
+ This module allows some Windows console manipulation that change text and background colors and change codepage.</p>
+    <h3>Info:</h3>
+    <ul>
+        <li><strong>Author</strong>: Yasuo Ohno <yasuo.ohno+github@gmail.com></li>
+    </ul>
+
+
+<h2><a href="#Functions">Functions</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#GetTextAttribute">GetTextAttribute ()</a></td>
+	<td class="summary">Get console text attribute.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#SetTextAttribute">SetTextAttribute (attr)</a></td>
+	<td class="summary">Set console text attribute.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#GetTextColor">GetTextColor ()</a></td>
+	<td class="summary">Get text fore and back color.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#SetTextColor">SetTextColor (foreground, background)</a></td>
+	<td class="summary">Set text fore and back color.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#InitialTextAttribute">InitialTextAttribute (attr)</a></td>
+	<td class="summary">Get/Set initial text attribute.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#GetCodepage">GetCodepage ()</a></td>
+	<td class="summary">Get input codepage</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#SetCodepage">SetCodepage (codepage)</a></td>
+	<td class="summary">Set input codepage</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#GetOutputCodepage">GetOutputCodepage ()</a></td>
+	<td class="summary">Get input codepage</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#SetOutputCodepage">SetOutputCodepage (codepage)</a></td>
+	<td class="summary">Set output codepage</td>
+	</tr>
+</table>
+
+<br/>
+<br/>
+
+
+    <h2><a name="Functions"></a>Functions</h2>
+    <dl class="function">
+    <dt>
+    <a name = "GetTextAttribute"></a>
+    <strong>GetTextAttribute ()</strong>
+    </dt>
+    <dd>
+    Get console text attribute.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        text attribute number.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "SetTextAttribute"></a>
+    <strong>SetTextAttribute (attr)</strong>
+    </dt>
+    <dd>
+    Set console text attribute.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">attr</span>
+         new text attribute number.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        old text attribute number.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "GetTextColor"></a>
+    <strong>GetTextColor ()</strong>
+    </dt>
+    <dd>
+    Get text fore and back color.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        foreground,background color number.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "SetTextColor"></a>
+    <strong>SetTextColor (foreground, background)</strong>
+    </dt>
+    <dd>
+    Set text fore and back color.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">foreground</span>
+         color number or nil(do not change)
+        </li>
+        <li><span class="parameter">background</span>
+         color number or nil(do not change)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "InitialTextAttribute"></a>
+    <strong>InitialTextAttribute (attr)</strong>
+    </dt>
+    <dd>
+    Get/Set initial text attribute.
+ Initial text attribute is used to restore text attribute on detached process.
+ Its default value is taken when the dll was attached(module was loaded).
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">attr</span>
+         text attribute number or -1 or nil(do not change). The -1 value indicated that do not restore text attribute when the dll have been detached.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        initial text attribute number.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "GetCodepage"></a>
+    <strong>GetCodepage ()</strong>
+    </dt>
+    <dd>
+    Get input codepage
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        codepage number
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "SetCodepage"></a>
+    <strong>SetCodepage (codepage)</strong>
+    </dt>
+    <dd>
+    Set input codepage
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">codepage</span>
+         number or string.
+ If the codepage parameter is a string, it must be one of the followings.
+ <ul>
+ <li>ANSI</li>
+ <li>OEM</li>
+ <li>T_ANSI</li>
+ <li>SYMBOL</li>
+ <li>UTF7</li>
+ <li>UTF8</li>
+ </ul>
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "GetOutputCodepage"></a>
+    <strong>GetOutputCodepage ()</strong>
+    </dt>
+    <dd>
+    Get input codepage
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        codepage number
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "SetOutputCodepage"></a>
+    <strong>SetOutputCodepage (codepage)</strong>
+    </dt>
+    <dd>
+    Set output codepage
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">codepage</span>
+         number or string.
+ If the codepage parameter is a string, it must be one of the followings.
+ <ul>
+ <li>ANSI</li>
+ <li>OEM</li>
+ <li>T_ANSI</li>
+ <li>SYMBOL</li>
+ <li>UTF7</li>
+ <li>UTF8</li>
+ </ul>
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+</dl>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.2</a></i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>
