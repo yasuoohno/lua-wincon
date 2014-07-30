@@ -40,7 +40,7 @@ function SetTextColor(foreground, background) end
 --- Get/Set initial text attribute.
 -- Initial text attribute is used to restore text attribute on detached process.
 -- Its default value is taken when the dll was attached(module was loaded).
--- @param attr text attribute number or -1 or nil(do not change). The -1 value indicated that do not restore text attribute when the dll have been detached.
+-- @param attr text attribute number, -1 or nil(do not change).<br>The -1 value indicate that it will not restore text attribute when the dll is detaching.
 -- @return initial text attribute number.
 function InitialTextAttribute(attr) end
 --- Get input codepage
