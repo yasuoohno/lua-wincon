@@ -26,3 +26,6 @@ Reference
 ---------
 
 See [ldoc](doc/index.html)
+
+* If you want to see the document from github directly - [link](https://rawgit.com/yasuoohno/lua-wincon/master/doc/index.html)
+
